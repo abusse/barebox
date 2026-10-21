@@ -355,6 +355,7 @@ static int at91_ether_probe(struct device *dev)
 
 	at91_emac_write(AT91_EMAC_CFG, mac_cfg);
 
+	miibus->parent = dev;
 	mdiobus_register(miibus);
 	eth_register(edev);
 
