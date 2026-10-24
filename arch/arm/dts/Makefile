@@ -236,6 +236,7 @@ lwl-$(CONFIG_MACH_AC_SXB) += ac-sxb.dtb.o
 lwl-$(CONFIG_MACH_CALAO) += \
 	tny_a9260.dtb.o tny_a9g20.dtb.o \
 	usb_a9260.dtb.o usb_a9g20.dtb.o
+lwl-$(CONFIG_MACH_TASKIT_PORTUXG20) += at91-portuxg20.dtb.o
 lwl-$(CONFIG_MACH_AT91SAM9263EK_DT) += at91sam9263ek.dtb.o
 lwl-$(CONFIG_MACH_SAMA5D3_XPLAINED) += at91-sama5d3_xplained.dtb.o
 lwl-$(CONFIG_MACH_MICROCHIP_KSZ9477_EVB) += at91-microchip-ksz9477-evb.dtb.o

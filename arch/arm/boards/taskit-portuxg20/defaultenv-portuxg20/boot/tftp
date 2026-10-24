@@ -1,0 +1,13 @@
+#!/bin/sh
+# Boot the Buildroot images for the PortuxG20 over TFTP, the latest build:
+# zImage, device tree and initramfs from the portuxg20/ directory of the
+# TFTP server. The server comes from nv.net.server or DHCP.
+
+path="${global.net.fetchdir}"
+
+ifup -a1
+
+global.bootm.image="${path}/portuxg20/zImage"
+global.bootm.oftree="${path}/portuxg20/at91-portuxg20.dtb"
+global.bootm.initrd="${path}/portuxg20/rootfs.cpio.gz"
+global linux.bootargs.dyn.hostname="hostname=${global.hostname}"

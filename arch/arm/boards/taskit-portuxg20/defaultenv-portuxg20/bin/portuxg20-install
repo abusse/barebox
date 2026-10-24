@@ -1,0 +1,49 @@
+#!/bin/sh
+# Set up a board to run barebox from NAND: keep its MAC address, write the
+# rescue system, save the environment, then write barebox and, last, the
+# SPL to block 0. Run it from a barebox chain-loaded from U-Boot or started
+# in SDRAM through the boot ROM, or from barebox in NAND to reinstall
+# everything. The files come from the portuxg20/ directory on the server
+# (nv.net.server or DHCP next-server).
+# usage: portuxg20-install [MAC]
+
+path="${global.net.fetchdir}/portuxg20"
+
+mac="$1"
+[ -z "$mac" ] && mac="${nv.dev.eth0.ethaddr}"
+if [ -z "$mac" ]; then
+	echo "no MAC address known; give it: portuxg20-install xx:xx:xx:xx:xx:xx"
+	exit 1
+fi
+echo "MAC address: $mac"
+nv dev.eth0.ethaddr="$mac"
+
+ifup -a1 || exit 1
+
+echo "dtb: at91-portuxg20.dtb"
+erase /dev/nand0.dtb.bb || exit 1
+cp "${path}/at91-portuxg20.dtb" /dev/nand0.dtb.bb || exit 1
+memcmp -s "${path}/at91-portuxg20.dtb" -d /dev/nand0.dtb.bb 0 0 || exit 1
+
+echo "kernel: zImage"
+erase /dev/nand0.kernel.bb || exit 1
+cp "${path}/zImage" /dev/nand0.kernel.bb || exit 1
+memcmp -s "${path}/zImage" -d /dev/nand0.kernel.bb 0 0 || exit 1
+
+echo "rescue: rootfs.cpio.uboot"
+erase /dev/nand0.rescue.bb || exit 1
+cp "${path}/rootfs.cpio.uboot" /dev/nand0.rescue.bb || exit 1
+memcmp -s "${path}/rootfs.cpio.uboot" -d /dev/nand0.rescue.bb 0 0 || exit 1
+
+saveenv || exit 1
+
+echo "barebox: barebox-taskit-portuxg20.img"
+erase /dev/nand0.barebox.bb || exit 1
+cp "${path}/barebox-taskit-portuxg20.img" /dev/nand0.barebox.bb || exit 1
+memcmp -s "${path}/barebox-taskit-portuxg20.img" -d /dev/nand0.barebox.bb 0 0 || exit 1
+
+echo "spl: boot.bin"
+erase /dev/nand0.spl.bb || exit 1
+cp "${path}/boot.bin" /dev/nand0.spl.bb || exit 1
+memcmp -s "${path}/boot.bin" -d /dev/nand0.spl.bb 0 0 || exit 1
+echo "board installed; reset to start barebox from NAND"

@@ -165,6 +165,10 @@ pblb-$(CONFIG_MACH_USB_A9G20) += start_usb_a9g20
 FILE_barebox-usb-a9g20.img = start_usb_a9g20.pblb
 image-$(CONFIG_MACH_USB_A9G20) += barebox-usb-a9g20.img
 
+pblb-$(CONFIG_MACH_TASKIT_PORTUXG20) += start_taskit_portuxg20
+FILE_barebox-taskit-portuxg20.img = start_taskit_portuxg20.pblb
+image-$(CONFIG_MACH_TASKIT_PORTUXG20) += barebox-taskit-portuxg20.img
+
 pblb-$(CONFIG_MACH_CALAO) += start_tny_a9260 start_tny_a9g20 \
 			     start_usb_a9260 start_usb_a9g20
 FILE_barebox-tny-a9260.img = start_tny_a9260.pblb

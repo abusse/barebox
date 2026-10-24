@@ -558,6 +558,17 @@ config MACH_CALAO
 	  Select this if you are using a device tree enabled board
 	  from Calao Systems: TNY-A9260, TNY-A9G20, USB-A9260 or USB-A9G20.
 
+config MACH_TASKIT_PORTUXG20
+	bool "taskit PortuxG20"
+	select SOC_AT91SAM9260
+	select OFDEVICE
+	select COMMON_CLK_OF_PROVIDER
+	select HAVE_AT91_SDRAMC
+	help
+	  Select this if you are using the taskit PortuxG20 (Stamp9G20 module,
+	  AT91SAM9G20). barebox runs as second stage after a first stage that
+	  has set up clocks and SDRAM.
+
 config MACH_SKOV_ARM9CPU
 	bool "SKOV ARM9 CPU"
 	select SOC_AT91SAM9263
