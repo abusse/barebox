@@ -45,6 +45,24 @@ config BAREBOX_UPDATE_PXA_NAND
 
 comment "Intel/Marvell PXA boards"
 
+config MACH_GUMSTIX_VERDEX
+	bool "Gumstix verdex / verdex pro"
+	select ARCH_PXA27X
+	depends on !MACH_GUMSTIX_CONNEX && !ARCH_PXA3XX
+	help
+	  Say Y here if you are using a Gumstix verdex or verdex pro (PXA270)
+	  COM. barebox can boot from NOR flash or be chain-loaded into SDRAM
+	  by the Gumstix U-Boot.
+
+config MACH_GUMSTIX_CONNEX
+	bool "Gumstix basix / connex"
+	select ARCH_PXA25X
+	depends on !ARCH_PXA3XX
+	help
+	  Say Y here if you are using a Gumstix basix or connex (PXA255) COM.
+	  barebox runs as second stage only, after a loader that has set up
+	  the SDRAM.
+
 config MACH_RAUMFELD_SPEAKER
 	bool "Raumfeld Speaker"
 	select ARCH_PXA300

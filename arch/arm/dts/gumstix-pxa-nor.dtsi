@@ -1,0 +1,71 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * NOR flash at CS0 of the Gumstix PXA modules: 16 bit Intel StrataFlash
+ * (connex) or P30 (verdex), 16 or 32 MiB. The partitions cover 16 MiB and
+ * so fit every variant. The node sits where the Linux device trees have it
+ * (/pxabus/flash@0), so that barebox finds it when it puts the partitions
+ * into the kernel's tree; the labels are the same too.
+ */
+
+/ {
+	chosen {
+		environment {
+			compatible = "barebox,environment";
+			device-path = &env_nor;
+		};
+	};
+
+	pxabus {
+		flash@0 {
+			compatible = "cfi-flash";
+			reg = <0x00000000 0x02000000>;
+			bank-width = <2>;
+			/* the zero page is kept unmapped to catch NULL pointers */
+			virtual-reg = <0xe0000000>;
+
+			partitions {
+				compatible = "fixed-partitions";
+				#address-cells = <1>;
+				#size-cells = <1>;
+
+				/*
+				 * The loader keeps the first two blocks of the
+				 * Gumstix layout (U-Boot's environment is at
+				 * 0x3f000; barebox reads it). Block 2 is erased in
+				 * that layout and holds barebox's environment.
+				 * Behind them the rescue system of the "nor" boot
+				 * entry as uImages (barebox reads a uImage only as
+				 * far as its header says, a plain file in a raw
+				 * partition completely): kernel, device tree,
+				 * initramfs. As shipped, a JFFS2 root filesystem
+				 * followed from 0x40000 and the kernel sat in the
+				 * top 2 MiB.
+				 */
+				partition@0 {
+					label = "bootloader";
+					reg = <0x00000000 0x00040000>;
+				};
+
+				env_nor: partition@40000 {
+					label = "bootloader-env";
+					reg = <0x00040000 0x00020000>;
+				};
+
+				partition@60000 {
+					label = "kernel";
+					reg = <0x00060000 0x00780000>;
+				};
+
+				partition@7e0000 {
+					label = "oftree";
+					reg = <0x007e0000 0x00020000>;
+				};
+
+				partition@800000 {
+					label = "root";
+					reg = <0x00800000 0x00800000>;
+				};
+			};
+		};
+	};
+};

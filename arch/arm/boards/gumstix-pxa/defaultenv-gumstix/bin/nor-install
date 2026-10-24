@@ -1,0 +1,29 @@
+#!/bin/sh
+# Write the rescue system to NOR for the "nor" boot entry, from the
+# gumstix-verdex/ directory on the server (nv.net.server or DHCP next-server):
+# kernel, this board's device tree, initramfs. The P30's blocks are locked
+# at power-up, so each partition is unlocked first.
+
+path="${global.net.fetchdir}/gumstix-verdex"
+
+ifup -a1 || exit 1
+
+echo "kernel: nor-kernel.uImage"
+unprotect /dev/nor0.kernel || exit 1
+erase /dev/nor0.kernel || exit 1
+cp "${path}/nor-kernel.uImage" /dev/nor0.kernel || exit 1
+
+echo "oftree: nor-oftree-${global.gumstix.board}.uImage"
+unprotect /dev/nor0.oftree || exit 1
+erase /dev/nor0.oftree || exit 1
+cp "${path}/nor-oftree-${global.gumstix.board}.uImage" /dev/nor0.oftree || exit 1
+
+echo "root: rootfs.cpio.uboot"
+unprotect /dev/nor0.root || exit 1
+erase /dev/nor0.root || exit 1
+cp "${path}/rootfs.cpio.uboot" /dev/nor0.root || exit 1
+
+uimage -v /dev/nor0.kernel > /dev/null || exit 1
+uimage -v /dev/nor0.oftree > /dev/null || exit 1
+uimage -v /dev/nor0.root > /dev/null || exit 1
+echo "rescue system written; boot it with: boot nor"

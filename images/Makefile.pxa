@@ -3,6 +3,16 @@
 # barebox image generation Makefile for PXA images
 #
 
+pblb-$(CONFIG_MACH_GUMSTIX_VERDEX) += start_gumstix_verdex start_gumstix_verdex_lan91c111
+FILE_barebox-gumstix-verdex.img = start_gumstix_verdex.pblb
+image-$(CONFIG_MACH_GUMSTIX_VERDEX) += barebox-gumstix-verdex.img
+FILE_barebox-gumstix-verdex-lan91c111.img = start_gumstix_verdex_lan91c111.pblb
+image-$(CONFIG_MACH_GUMSTIX_VERDEX) += barebox-gumstix-verdex-lan91c111.img
+
+pblb-$(CONFIG_MACH_GUMSTIX_CONNEX) += start_gumstix_connex
+FILE_barebox-gumstix-connex.img = start_gumstix_connex.pblb
+image-$(CONFIG_MACH_GUMSTIX_CONNEX) += barebox-gumstix-connex.img
+
 pblb-$(CONFIG_MACH_RAUMFELD_SPEAKER) += start_raumfeld_speaker
 FILE_barebox-raumfeld-speaker.img = start_raumfeld_speaker.pblb
 image-$(CONFIG_MACH_RAUMFELD_SPEAKER) += barebox-raumfeld-speaker.img

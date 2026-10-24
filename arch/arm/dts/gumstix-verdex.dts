@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Gumstix verdex / verdex pro (PXA270) COM with a LAN9117 carrier
+ * (netpro-vx, netmicroSD-vx). Runs chain-loaded from the Gumstix U-Boot; as
+ * the first stage in NOR it has not been tried yet.
+ */
+/dts-v1/;
+#include <arm/intel/pxa/pxa27x.dtsi>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include "gumstix-pxa-nor.dtsi"
+
+/ {
+	model = "Gumstix verdex";
+	compatible = "gumstix,verdex", "marvell,pxa270";
+	barebox,disable-deep-probe;
+
+	chosen {
+		stdout-path = &ffuart;
+	};
+
+	/* memory: registered by the board code from what the PBL detected */
+
+	pxabus {
+		/* LAN9117 on nCS1, IRQ GPIO 99, reset GPIO 107 (released by the PBL) */
+		ethernet@4000000 {
+			compatible = "smsc,lan9117", "smsc,lan9115";
+			reg = <0x04000000 0x100>;
+			interrupt-parent = <&gpio>;
+			interrupts = <99 IRQ_TYPE_LEVEL_LOW>;
+			reg-io-width = <4>;
+			smsc,irq-active-high;
+			phy-mode = "mii";
+		};
+	};
+};
+
+&ffuart {
+	status = "okay";
+};
+
+&mmc0 {
+	status = "okay";
+};

@@ -1,0 +1,10 @@
+#!/bin/sh
+# Set up a board to run from NOR: write the rescue system (nor-install) and
+# then barebox itself (barebox-install, which keeps the Gumstix U-Boot's
+# environment). Run it from a barebox chain-loaded by the Gumstix U-Boot, or
+# from barebox in NOR to update everything. Settings are not saved; saveenv
+# does that (block 2).
+
+nor-install || exit 1
+barebox-install || exit 1
+echo "board installed; reset to start barebox from NOR"

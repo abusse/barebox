@@ -1,0 +1,9 @@
+#!/bin/sh
+# zImage and device tree from the FAT partition of the (micro)SD card.
+
+mkdir -p /mnt/sd
+mount /dev/disk0.0 /mnt/sd || exit 1
+
+global.bootm.image="/mnt/sd/zImage"
+global.bootm.oftree="/mnt/sd/${global.gumstix.dtb}"
+global.linux.bootargs.dyn.root="root=/dev/mmcblk0p2 rootwait"

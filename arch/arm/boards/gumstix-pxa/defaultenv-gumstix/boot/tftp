@@ -1,0 +1,13 @@
+#!/bin/sh
+# Boot the rescue system over TFTP, the latest build: zImage, device tree and
+# initramfs from the gumstix-verdex/ directory of the TFTP server (nv.net.server
+# or the DHCP next-server).
+
+path="${global.net.fetchdir}"
+
+ifup -a1 || exit 1
+
+global.bootm.image="${path}/gumstix-verdex/zImage"
+global.bootm.oftree="${path}/gumstix-verdex/${global.gumstix.dtb}"
+global.bootm.initrd="${path}/gumstix-verdex/rootfs.cpio.gz"
+global linux.bootargs.dyn.hostname="hostname=${global.hostname}"

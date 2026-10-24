@@ -1,0 +1,37 @@
+#!/bin/sh
+# Boot Gentoo over NFS: kernel and device tree over TFTP, the root filesystem
+# read-only from the same server, shared by all boards of this type, and a
+# writable directory of this board's own (boardstate= for Linux).
+# The device tree comes from DHCP (option 224) and the kernel is the zImage
+# next to it: the DHCP boot file is barebox itself when the Gumstix U-Boot
+# chain-loads it. Root and board directory come from nv if set, else from
+# DHCP (root path; the board directory is /srv/nfs/state/<hostname>). With
+# no root path at all this entry fails, so that the next one runs.
+
+path="${global.net.fetchdir}"
+
+ifup -a1
+
+oftree="${global.dhcp.oftree_file}"
+[ -z "$oftree" ] && oftree="gumstix-verdex/kernel/current/${global.gumstix.dtb}"
+dirname "$oftree" kdir
+nfsroot="${global.gumstix.nfsroot}"
+nfsstate="${global.gumstix.nfsstate}"
+if [ -n "${global.dhcp.rootpath}" ]; then
+	[ -z "$nfsroot" ] && nfsroot="${global.dhcp.rootpath}"
+	[ -z "$nfsstate" ] && nfsstate="/srv/nfs/state/${global.hostname}"
+fi
+if [ -z "$nfsroot" ]; then
+	echo "nfs: no root path (nv gumstix.nfsroot or DHCP option 17)"
+	exit 1
+fi
+
+global.bootm.image="${path}/${kdir}/zImage"
+global.bootm.oftree="${path}/${oftree}"
+
+ip_route_get -b ${global.net.server} global.linux.bootargs.dyn.ip
+args="root=/dev/nfs ro nfsroot=${global.net.server}:${nfsroot},v3,tcp,rsize=32768,wsize=32768"
+if [ -n "$nfsstate" ]; then
+	args="${args} boardstate=${global.net.server}:${nfsstate}"
+fi
+global.linux.bootargs.dyn.root="${args}"

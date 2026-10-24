@@ -270,3 +270,5 @@ obj-$(CONFIG_MACH_WOLFVISION_PF5) += rk3568-wolfvision-pf5-io-expander.dtbo.o \
 clean-files := *.dtb *.dtb.S .*.dtc .*.pre .*.dts *.dtb.z
 clean-files += *.dtbo *.dtbo.S .*.dtso
 lwl-$(CONFIG_MACH_RAUMFELD_SPEAKER) += pxa300-raumfeld-speaker.dtb.o
+lwl-$(CONFIG_MACH_GUMSTIX_VERDEX) += gumstix-verdex.dtb.o gumstix-verdex-lan91c111.dtb.o
+lwl-$(CONFIG_MACH_GUMSTIX_CONNEX) += gumstix-connex.dtb.o

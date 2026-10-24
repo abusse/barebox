@@ -1,0 +1,24 @@
+#!/bin/sh
+# Write barebox to NOR. barebox runs from SDRAM and can overwrite its own
+# copy. The Gumstix U-Boot's environment in the last 4 KiB of the same
+# partition (serial number, MAC address) is read first and written back;
+# the build keeps the image below it. The image is fetched to RAM first, so
+# that a failed transfer cannot leave the board without a loader; a power
+# failure between the erase and the end does (JTAG only).
+
+path="${global.net.fetchdir}/gumstix-verdex"
+img="barebox-${global.gumstix.board}.img"
+
+ifup -a1 || exit 1
+
+echo "barebox: ${img}"
+cp "${path}/${img}" /tmp/barebox.img || exit 1
+memcpy -s /dev/nor0.bootloader -d /tmp/uboot-env 0x3f000 0 0x1000 || exit 1
+
+unprotect /dev/nor0.bootloader || exit 1
+erase /dev/nor0.bootloader || exit 1
+cp /tmp/barebox.img /dev/nor0.bootloader || exit 1
+memcpy -s /tmp/uboot-env -d /dev/nor0.bootloader 0 0x3f000 0x1000 || exit 1
+memcmp -s /tmp/barebox.img -d /dev/nor0.bootloader 0 0 || exit 1
+memcmp -s /tmp/uboot-env -d /dev/nor0.bootloader 0 0x3f000 0x1000 || exit 1
+echo "barebox written; reset to start it from NOR"

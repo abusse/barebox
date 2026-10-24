@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Gumstix basix / connex (PXA255) COM on a LAN91C111 carrier (etherstix,
+ * netCF, netMMC, netDUO): nCS1, IRQ GPIO 36, reset GPIO 80. Also what the
+ * QEMU "connex" machine models. Not yet run on hardware.
+ */
+/dts-v1/;
+#include <arm/intel/pxa/pxa25x.dtsi>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include "gumstix-pxa-nor.dtsi"
+
+/ {
+	model = "Gumstix connex";
+	compatible = "gumstix,connex", "marvell,pxa250";
+	barebox,disable-deep-probe;
+
+	/* pxa2xx.dtsi points i2c0 at the PXA27x-only power I2C */
+	aliases {
+		/delete-property/ i2c0;
+	};
+
+	chosen {
+		stdout-path = &ffuart;
+	};
+
+	/* memory: registered by the board code from what the PBL detected */
+
+	pxabus {
+		ethernet@4000300 {
+			compatible = "smsc,lan91c111";
+			reg = <0x04000300 0x100>;
+			interrupt-parent = <&gpio>;
+			interrupts = <36 IRQ_TYPE_EDGE_RISING>;
+			reg-io-width = <2>;
+		};
+	};
+};
+
+&ffuart {
+	status = "okay";
+};
+
+&mmc0 {
+	status = "okay";
+};

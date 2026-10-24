@@ -1,0 +1,39 @@
+// SPDX-License-Identifier: GPL-2.0-or-later
+/*
+ * Gumstix verdex (PXA270) on a LAN91C111 carrier (older netCF-vx). This is
+ * also what the QEMU "verdex" machine models.
+ */
+/dts-v1/;
+#include <arm/intel/pxa/pxa27x.dtsi>
+#include <dt-bindings/interrupt-controller/irq.h>
+#include "gumstix-pxa-nor.dtsi"
+
+/ {
+	model = "Gumstix verdex (LAN91C111)";
+	compatible = "gumstix,verdex", "marvell,pxa270";
+	barebox,disable-deep-probe;
+
+	chosen {
+		stdout-path = &ffuart;
+	};
+
+	/* memory: registered by the board code from what the PBL detected */
+
+	pxabus {
+		ethernet@4000300 {
+			compatible = "smsc,lan91c111";
+			reg = <0x04000300 0x100>;
+			interrupt-parent = <&gpio>;
+			interrupts = <99 IRQ_TYPE_EDGE_RISING>;
+			reg-io-width = <2>;
+		};
+	};
+};
+
+&ffuart {
+	status = "okay";
+};
+
+&mmc0 {
+	status = "okay";
+};
