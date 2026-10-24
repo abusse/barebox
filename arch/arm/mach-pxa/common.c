@@ -64,7 +64,9 @@ static void __noreturn pxa_restart_soc(struct restart_handler *rst,
 
 static int restart_register_feature(void)
 {
-	if (!of_machine_is_compatible("marvell,pxa3xx"))
+	if (!of_machine_is_compatible("marvell,pxa3xx") &&
+	    !of_machine_is_compatible("marvell,pxa27x") &&
+	    !of_machine_is_compatible("marvell,pxa250"))
 		return 0;
 
 	restart_handler_register_fn("soc-wdt", pxa_restart_soc);

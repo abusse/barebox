@@ -4,6 +4,21 @@ if ARCH_PXA
 
 # ----------------------------------------------------------
 
+config ARCH_PXA2XX
+	bool
+	select CPU_XSCALE
+	select HAVE_CLK
+	select COMMON_CLK
+	select COMMON_CLK_OF_PROVIDER
+
+config ARCH_PXA25X
+	bool
+	select ARCH_PXA2XX
+
+config ARCH_PXA27X
+	bool
+	select ARCH_PXA2XX
+
 config ARCH_PXA3XX
 	bool
 	select CPU_XSC3
