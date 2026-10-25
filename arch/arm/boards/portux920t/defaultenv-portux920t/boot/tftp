@@ -1,0 +1,14 @@
+#!/bin/sh
+# Boot the Buildroot images for the Portux 920T over TFTP, the latest build:
+# plain zImage, the device tree with the PIF extension-board overlay merged,
+# and the initramfs, from the portux920t/ directory of the TFTP server. The
+# server comes from nv.net.server or DHCP.
+
+path="${global.net.fetchdir}"
+
+ifup -a1
+
+global.bootm.image="${path}/portux920t/zImage"
+global.bootm.oftree="${path}/portux920t/portux920t-pif.dtb"
+global.bootm.initrd="${path}/portux920t/rootfs.cpio.gz"
+global linux.bootargs.dyn.hostname="hostname=${global.hostname}"

@@ -1,0 +1,34 @@
+#!/bin/sh
+# Boot Gentoo over NFS: kernel and the device tree with the PIF overlay over
+# TFTP, the root filesystem read-only from the same server, shared by all
+# boards of this type, and a writable directory of this board's own
+# (boardstate= for Linux). Kernel and device tree come from DHCP (boot
+# file, option 224), root and board directory from nv if set, else from DHCP
+# (root path; the board directory is /srv/nfs/state/<hostname> when DHCP
+# gives a root path); anything missing is the built-in default.
+
+path="${global.net.fetchdir}"
+
+ifup -a1
+
+image="${global.dhcp.bootfile}"
+[ -z "$image" ] && image=portux920t/zImage
+oftree="${global.dhcp.oftree_file}"
+[ -z "$oftree" ] && oftree=portux920t/portux920t-pif.dtb
+nfsroot="${global.portux.nfsroot}"
+nfsstate="${global.portux.nfsstate}"
+if [ -n "${global.dhcp.rootpath}" ]; then
+	[ -z "$nfsroot" ] && nfsroot="${global.dhcp.rootpath}"
+	[ -z "$nfsstate" ] && nfsstate="/srv/nfs/state/${global.hostname}"
+fi
+[ -z "$nfsroot" ] && nfsroot=/srv/nfs/portux920t
+
+global.bootm.image="${path}/${image}"
+global.bootm.oftree="${path}/${oftree}"
+
+ip_route_get -b ${global.net.server} global.linux.bootargs.dyn.ip
+args="root=/dev/nfs ro nfsroot=${global.net.server}:${nfsroot},v3,tcp,rsize=32768,wsize=32768"
+if [ -n "$nfsstate" ]; then
+	args="${args} boardstate=${global.net.server}:${nfsstate}"
+fi
+global.linux.bootargs.dyn.root="${args}"

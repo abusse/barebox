@@ -1,0 +1,28 @@
+#!/bin/sh
+# Set up a board to run from NOR: keep its MAC address, write the rescue
+# system (nor-install), save the environment, and write barebox itself to
+# /dev/self last. Run it from a barebox chain-loaded from the vendor
+# U-Boot (whose environment still holds the MAC address), or from barebox
+# in NOR to reinstall everything.
+# usage: portux-install [MAC]
+
+path="${global.net.fetchdir}/portux920t"
+
+mac="$1"
+[ -z "$mac" ] && mac="${nv.dev.eth0.ethaddr}"
+[ -z "$mac" ] && mac="${global.portux.vendor_ethaddr}"
+if [ -z "$mac" ]; then
+	echo "no MAC address known; give it: portux-install xx:xx:xx:xx:xx:xx"
+	exit 1
+fi
+echo "MAC address: $mac"
+nv dev.eth0.ethaddr="$mac"
+
+nor-install || exit 1
+saveenv || exit 1
+
+echo "barebox: barebox-portux920t.img"
+erase /dev/self || exit 1
+cp "${path}/barebox-portux920t.img" /dev/self || exit 1
+memcmp -s "${path}/barebox-portux920t.img" -d /dev/self 0 0 || exit 1
+echo "board installed; reset to start barebox from NOR"

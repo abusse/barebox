@@ -85,6 +85,10 @@ pblb-$(CONFIG_MACH_AT91RM9200EK) += start_at91rm9200ek
 FILE_barebox-at91rm9200ek.img = start_at91rm9200ek.pblb
 image-$(CONFIG_MACH_AT91RM9200EK) += barebox-at91rm9200ek.img
 
+pblb-$(CONFIG_MACH_PORTUX920T) += start_portux920t
+FILE_barebox-portux920t.img = start_portux920t.pblb
+image-$(CONFIG_MACH_PORTUX920T) += barebox-portux920t.img
+
 pblb-$(CONFIG_MACH_AT91SAM9260EK) += start_at91sam9260ek
 FILE_barebox-at91sam9260ek.img = start_at91sam9260ek.pblb
 image-$(CONFIG_MACH_AT91SAM9260EK) += barebox-at91sam9260ek.img

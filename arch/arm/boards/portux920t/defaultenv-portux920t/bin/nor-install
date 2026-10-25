@@ -1,0 +1,24 @@
+#!/bin/sh
+# Write the Buildroot rescue system to NOR for the "nor" boot target, from
+# the portux920t/ directory on the server (nv.net.server or DHCP next-server).
+
+path="${global.net.fetchdir}/portux920t"
+
+ifup -a1 || exit 1
+
+echo "kernel: nor-kernel.uImage"
+erase /dev/nor0.kernel || exit 1
+cp "${path}/nor-kernel.uImage" /dev/nor0.kernel || exit 1
+
+echo "oftree: nor-oftree.uImage"
+erase /dev/nor0.oftree || exit 1
+cp "${path}/nor-oftree.uImage" /dev/nor0.oftree || exit 1
+
+echo "root: rootfs.cpio.uboot"
+erase /dev/nor0.root || exit 1
+cp "${path}/rootfs.cpio.uboot" /dev/nor0.root || exit 1
+
+uimage -v /dev/nor0.kernel > /dev/null || exit 1
+uimage -v /dev/nor0.oftree > /dev/null || exit 1
+uimage -v /dev/nor0.root > /dev/null || exit 1
+echo "rescue system written; boot it with: boot nor"

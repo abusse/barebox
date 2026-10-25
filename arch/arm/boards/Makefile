@@ -7,6 +7,7 @@ obj-$(CONFIG_MACH_ANIMEO_IP)			+= animeo_ip/
 obj-$(CONFIG_MACH_AM625_SK)			+= am625-sk/
 obj-$(CONFIG_MACH_AM62LX_EVM)			+= am62lx-evm/
 obj-$(CONFIG_MACH_AT91RM9200EK)			+= at91rm9200ek/
+obj-$(CONFIG_MACH_PORTUX920T)			+= portux920t/
 obj-$(CONFIG_MACH_AT91SAM9260EK)		+= at91sam9260ek/
 obj-$(CONFIG_MACH_AT91SAM9261EK)		+= at91sam9261ek/
 obj-$(CONFIG_MACH_AT91SAM9263EK)		+= at91sam9263ek/
