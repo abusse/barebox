@@ -10,6 +10,8 @@
 path="${global.net.fetchdir}"
 
 ifup -a1
+lcd 1 "${eth0.ipaddr}"
+lcd 3 "boot Gentoo"
 
 image="${global.dhcp.bootfile}"
 [ -z "$image" ] && image=portux920t/zImage

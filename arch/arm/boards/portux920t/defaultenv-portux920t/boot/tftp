@@ -7,6 +7,8 @@
 path="${global.net.fetchdir}"
 
 ifup -a1
+lcd 1 "${eth0.ipaddr}"
+lcd 3 "boot rescue TFTP"
 
 global.bootm.image="${path}/portux920t/zImage"
 global.bootm.oftree="${path}/portux920t/portux920t-pif.dtb"

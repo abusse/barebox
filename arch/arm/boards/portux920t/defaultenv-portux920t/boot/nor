@@ -3,6 +3,8 @@
 # kernel, device tree with the PIF overlay and initramfs, each a uImage
 # (barebox reads uImages only as far as their header says).
 
+lcd 3 "boot rescue NOR"
+
 global.bootm.image=/dev/nor0.kernel
 global.bootm.oftree=/dev/nor0.oftree
 global.bootm.initrd=/dev/nor0.root
